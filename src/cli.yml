@@ -9,6 +9,10 @@ args:
         takes_value: true
         multiple: true
         index: 1
+    - debug:
+       long: debug
+       short: d
+       help: Debug mode
     - dry-run:
         long: dry-run
         short: n
