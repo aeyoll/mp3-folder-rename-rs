@@ -11,57 +11,12 @@ extern crate clogger;
 extern crate log;
 
 use id3::Tag;
-use std::fmt;
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
 
-
-#[derive(Debug)]
-pub struct Album {
-    pub artist: String,
-    pub year: String,
-    pub name: String,
-}
-
-impl Album {
-    pub fn new(artist: String, year: String, name: String) -> Self {
-        Album {
-            artist,
-            year,
-            name,
-        }
-    }
-
-    pub fn from_tag(tag: Tag) -> Option<Album> {
-        let artist = match tag.artist() {
-            Some(artist) => artist.to_owned(),
-            None => return None,
-        };
-
-        let year = match tag.year() {
-            Some(year) => year.to_string().to_owned(),
-            None => return None,
-        };
-
-        let name = match tag.album() {
-            Some(name) => name.to_owned(),
-            None => return None,
-        };
-
-        Some(Album {
-            artist,
-            year,
-            name,
-        })
-    }
-}
-
-impl fmt::Display for Album {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} - {} - {}", self.artist, self.year, self.name)
-    }
-}
+mod album;
+use album::Album;
 
 fn get_tag_from_filepath(path: &str) -> id3::Tag {
     id3::Tag::read_from_path(path).unwrap()
