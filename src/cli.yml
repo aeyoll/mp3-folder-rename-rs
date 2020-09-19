@@ -1,0 +1,15 @@
+name: music-folder-rename
+version: "0.0.1"
+author: Jean-Philippe Bidegain <jp@bidega.in>
+about: Rename mp3 folders
+args:
+    - SRC:
+        help: The source folders to rename
+        required: true
+        takes_value: true
+        multiple: true
+        index: 1
+    - dry-run:
+        long: dry-run
+        short: n
+        help: Dry run mode
