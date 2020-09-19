@@ -103,7 +103,7 @@ impl Folder {
 
                 break;
             } else {
-                warn!("Not all information where found if \"{}\" tags", file_name);
+                warn!("Not all information where found in \"{}\" tags", file_name);
             }
         }
     }
