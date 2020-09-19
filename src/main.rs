@@ -63,8 +63,10 @@ fn process_folder(folder: &str, dry_run: bool) {
                 info!("Renaming folder from {:?} to {:?}", old_path, new_path);
 
                 if dry_run == false {
-                    let res = fs::rename(folder, new_path);
-                    println!("Result: {:?}", res);
+                    match fs::rename(folder, &new_path) {
+                        Ok(_) => info!("Successfully renamed folder from {:?} to {:?}", folder, new_path),
+                        Err(_) => error!("Failed to rename folder from {:?} to {:?}", folder, new_path),
+                    }
                 }
 
                 break;
