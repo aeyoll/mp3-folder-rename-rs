@@ -243,7 +243,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "mp3-folder-rename-rs"
+name = "mp3-folder-rename"
 version = "0.1.0"
 dependencies = [
  "clap",
