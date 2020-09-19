@@ -71,7 +71,10 @@ fn main() {
 
                     if let Some(album) = Album::from_tag(tag) {
                         info!("All information found in {}", file_name);
-                        debug!("Artist: {} / Year: {} / Album: {}", album.artist, album.year, album.name);
+                        debug!(
+                            "Artist: {} / Year: {} / Album: {}",
+                            album.artist, album.year, album.name
+                        );
 
                         debug!("Building the folder name");
                         let new_folder_name: String = album.to_string();

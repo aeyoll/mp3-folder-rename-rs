@@ -1,5 +1,5 @@
-use std::fmt;
 use id3::Tag;
+use std::fmt;
 
 #[derive(Debug)]
 pub struct Album {
@@ -25,11 +25,7 @@ impl Album {
             None => return None,
         };
 
-        Some(Album {
-            artist,
-            year,
-            name,
-        })
+        Some(Album { artist, year, name })
     }
 }
 
