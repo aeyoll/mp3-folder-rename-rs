@@ -27,6 +27,54 @@ fn is_mp3(file_name: &str) -> bool {
     guess.first().unwrap() == "audio/mpeg"
 }
 
+fn process_folder(folder: &str, dry_run: bool) {
+    debug!("Parsing folder to find a mp3 file: {}", folder);
+    let paths = fs::read_dir(folder).unwrap();
+
+    for path in paths {
+        let entry = path.unwrap();
+        let entry_path = entry.path();
+        let file_name = entry_path.file_name().unwrap().to_str().unwrap();
+
+        if is_mp3(file_name) {
+            debug!("MP3 found {:?}", file_name);
+
+            // Building path
+            let mut full_path = PathBuf::from(folder.to_string());
+            full_path.push(file_name);
+
+            debug!("Getting the tags from {}", file_name);
+            let tag: Tag = get_tag_from_filepath(full_path.to_str().unwrap());
+
+            if let Some(album) = Album::from_tag(tag) {
+                info!("All information found in {}", file_name);
+                debug!(
+                    "Artist: {} / Year: {} / Album: {}",
+                    album.artist, album.year, album.name
+                );
+
+                debug!("Building the folder name");
+                let new_folder_name: String = album.to_string();
+
+                let old_path = Path::new(&folder);
+                let parent = old_path.parent().unwrap();
+                let new_path = parent.join(new_folder_name);
+
+                info!("Renaming folder from {:?} to {:?}", old_path, new_path);
+
+                if dry_run == false {
+                    let res = fs::rename(folder, new_path);
+                    println!("Result: {:?}", res);
+                }
+
+                break;
+            } else {
+                warn!("Not all information where found if \"{}\" tags", file_name);
+            }
+        }
+    }
+}
+
 fn main() {
     clogger::init();
 
@@ -49,53 +97,7 @@ fn main() {
 
     if let Some(folders) = matches.values_of("SRC") {
         for folder in folders {
-            debug!("Parsing folder: {}", folder);
-
-            // Parse the folder to find a mp3 file
-            let paths = fs::read_dir(folder).unwrap();
-
-            for path in paths {
-                let entry = path.unwrap();
-                let entry_path = entry.path();
-                let file_name = entry_path.file_name().unwrap().to_str().unwrap();
-
-                if is_mp3(file_name) {
-                    debug!("MP3 found {:?}", file_name);
-
-                    // Building path
-                    let mut full_path = PathBuf::from(folder.to_string());
-                    full_path.push(file_name);
-
-                    debug!("Getting the tags from {}", file_name);
-                    let tag: Tag = get_tag_from_filepath(full_path.to_str().unwrap());
-
-                    if let Some(album) = Album::from_tag(tag) {
-                        info!("All information found in {}", file_name);
-                        debug!(
-                            "Artist: {} / Year: {} / Album: {}",
-                            album.artist, album.year, album.name
-                        );
-
-                        debug!("Building the folder name");
-                        let new_folder_name: String = album.to_string();
-
-                        let old_path = Path::new(&folder);
-                        let parent = old_path.parent().unwrap();
-                        let new_path = parent.join(new_folder_name);
-
-                        info!("Renaming folder from {:?} to {:?}", old_path, new_path);
-
-                        if dry_run == false {
-                            let res = fs::rename(folder, new_path);
-                            println!("Result: {:?}", res);
-                        }
-
-                        break;
-                    } else {
-                        warn!("Not all information where found if \"{}\" tags", file_name);
-                    }
-                }
-            }
+            process_folder(folder, dry_run);
         }
     }
 }
