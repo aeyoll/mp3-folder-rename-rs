@@ -1,8 +1,10 @@
 [package]
 name = "mp3-folder-rename"
 version = "0.1.0"
-authors = ["Jean-Philippe Bidegain <jean-philippe@kaizen-developments.com>"]
+authors = ["Jean-Philippe Bidegain <jp@bidega.in>"]
+description = "A small utility to rename mp3 folders"
 edition = "2018"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
